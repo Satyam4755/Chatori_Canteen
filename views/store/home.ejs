@@ -625,30 +625,40 @@
         <% } else { %>
 
             <div class="cards-container">
-                <% venders.forEach(vender=> { %>
-                    <div class="card">
-                        <a href="/user/vendor-owner/<%= vender.vender._id %>">
-                            <img src="<%= vender.image %>" alt="vender Image">
-                            <div class="content">
-                                <h3>
-                                    <%= vender.Name %>
-                                </h3>
-                                <p><strong>₹<%= vender.Price %></strong></p>
-                                <p>⭐
-                                    <% for (let i=1; i <=Math.round(vender.averageRating); i++) { %>
-                                        ⭐
-                                         <% } %>
-                                            (<%= vender.averageRating %>/5)
-                                </p>
-                                <p><strong>
-                                        <%= vender.vender?.location || 'Unknown Location' %>
-                                    </strong>
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                    <% }) %>
-            </div>
+  <% venders.forEach(vender => { %>
+
+    <% if (vender && vender.vender && vender.vender._id) { %>
+
+      <div class="card">
+        <a href="/user/vendor-owner/<%= vender.vender._id %>">
+          <img src="<%= vender.image %>" alt="Vendor Image">
+
+          <div class="content">
+            <h3><%= vender.Name %></h3>
+
+            <p><strong>₹<%= vender.Price %></strong></p>
+
+            <p>
+              ⭐
+              <% for (let i = 1; i <= Math.round(vender.averageRating || 0); i++) { %>
+                ⭐
+              <% } %>
+              (<%= vender.averageRating || 0 %>/5)
+            </p>
+
+            <p>
+              <strong>
+                <%= vender.vender.location || "Unknown Location" %>
+              </strong>
+            </p>
+          </div>
+        </a>
+      </div>
+
+    <% } %>
+
+  <% }) %>
+</div>
             <% } %>
 
 
