@@ -1,0 +1,416 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+
+<style>
+  .mainDabba{
+    margin-bottom: 50%;
+  }
+  body {
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin: 30px 0 0 30px;
+    padding: 8px 18px;
+    background: #fff;
+    color: #333;
+    border-radius: 24px;
+    border: 1px solid #e0e0e0;
+    text-decoration: none;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: background 0.2s, color 0.2s;
+  }
+  .back-btn:hover {
+    background: #f1f1f1;
+    color: #007bff;
+  }
+
+  .canteen-header {
+    background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+    margin: 30px auto 20px auto;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(252,182,159,0.12);
+    max-width: 700px;
+    padding: 36px 40px 24px 40px;
+    text-align: center;
+    position: relative;
+  }
+  .canteen-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #d35400;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(255,255,255,0.2);
+  }
+  .canteen-header .info {
+    margin: 8px 0;
+    font-size: 1.1rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .canteen-header .info strong {
+    color: #b35400;
+    font-weight: 600;
+  }
+
+  .dish-search {
+    display: flex;
+    justify-content: center;
+    margin: 32px 0 18px 0;
+  }
+  .search-bar-form {
+    display: flex;
+    align-items: stretch;
+    background: #fff;
+    border-radius: 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 4px 8px;
+    max-width: 420px;
+    width: 100%;
+    border: 1px solid #fcb69f;
+    position: relative;
+  }
+  .search-bar-form input[type="text"] {
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    background: transparent;
+    padding: 12px 16px;
+    border-radius: 32px 0 0 32px;
+    color: #333;
+  }
+  .search-bar-form button[type="submit"] {
+    background: linear-gradient(90deg, #fcb69f 0%, #ffecd2 100%);
+    border-radius: 0 32px 32px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-bar-form button[type="submit"]:hover {
+    background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+    color: #d35400;
+  }
+  #dish-dropdown {
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 16px rgba(252,182,159,0.13);
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .dropdown-item {
+    transition: background 0.15s;
+  }
+  .dropdown-item:hover {
+    background: #ffe0c7;
+    color: #d35400;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 18px 10px 0 10px;
+    max-height: 105vh;
+    overflow: hidden;
+}
+  .card {
+    border-radius: 18px;
+    overflow: hidden;
+    width: 170px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 2px solid #ffffff;
+    position: relative;
+}
+
+
+.card:hover {
+    transform: translateY(-8px) scale(1.03);
+}
+
+.card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    transition: transform 0.4s, filter 0.4s;
+    margin-bottom: 4px; /* small spacing after image */
+}
+
+.card img:hover {
+    transform: scale(1.08);
+    filter: brightness(1.1) saturate(1.2);
+}
+
+.content {
+    padding: 0 10px; /* minimal padding */
+}
+
+.card h3 {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #2c3e50;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+}
+
+.card p {
+    margin: 2px 0 0 0;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #555;
+    font-size: 13px;
+    text-align: left;
+    line-height: 1.2;
+}
+    h2 {
+        text-align: center;
+        color: #ff4d4f;
+        margin-top: 48px;
+        font-size: 150%;
+        font-weight: 700;
+        letter-spacing: 1px;
+        /* text-shadow: 0 2px 8px #ffd6d6; */
+    }
+  .card .reserve {
+    margin-top: 14px;
+    background: linear-gradient(90deg, #fcb69f 0%, #ffecd2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 22px;
+    padding: 10px 28px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    box-shadow: 0 2px 8px rgba(252,182,159,0.13);
+  }
+  .card .reserve:hover {
+    background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+    color: #d35400;
+  }
+  .fav-btn { 
+    position: absolute;
+    top: 70%;
+    left: 70%;
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .fav-btn img {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 2px 6px rgba(252,182,159,0.18));
+    transition: transform 0.15s;
+  }
+  .fav-btn button:hover img {
+    transform: scale(1.15) rotate(-8deg);
+  }
+  #favImg1 {
+        filter: grayscale(1);
+    }
+
+    #favImg1:hover {
+        transform: scale(1.2) rotate(10deg);
+        filter: brightness(1.0);
+    }
+
+    #favImg2:hover {
+        transform: scale(1.2) rotate(-10deg);
+        filter: grayscale(1);
+    }
+
+  @media (max-width: 800px) {
+    .canteen-header h1 {
+      font-size: 1.5rem;
+    }
+    .cards-container {
+    display: grid;                  /* ✅ Switch to grid */
+    grid-template-columns: repeat(2, 1fr);  /* ✅ 2 columns */
+    gap: 16px; 
+  }
+
+  .card {
+    width: 95%;
+    height: 30vh;
+    aspect-ratio: 1 / 1.2; /* ✅ Maintain aspect ratio for cards */
+  }
+  }
+</style>
+
+<a class="back-btn" href="/">← Back to Home</a>
+
+<div class="mainDabba">
+  <div class="canteen-header">
+    <h1><%= ownerName %></h1>
+
+    <% if (venders.length > 0) { 
+      let totalRating = 0, validVenders = 0;
+
+      venders.forEach(v => {
+        if (v.averageRating && !isNaN(v.averageRating)) {
+          totalRating += v.averageRating;
+          validVenders++;
+        }
+      });
+
+      const avgRating = validVenders > 0 ? Math.round((totalRating / validVenders) * 10) / 10 : 0;
+      const fullStars = Math.round(avgRating);
+    %>
+      <div class="info"><strong>Ratings:</strong>
+        <% for (let i = 1; i <= fullStars; i++) { %>⭐<% } %>
+        (<%= avgRating %>/5 avg rating)
+      </div>
+      <div class="info">
+        ₹<%= Math.round(venders.map(v => v.Price).reduce((a, b) => a + b, 0) / venders.length) %> average price
+      </div>
+      <div class="info">📍 <%= ownerLocation %></div>
+    <% } %>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="dish-search">
+    <form action="/user/vendor-owner/<%= owner._id %>" method="get" class="search-bar-form" id="search-bar">
+      <div style="position: relative; flex: 1;">
+        <input type="text" name="dish" placeholder="🔍 Search Dishes..." id="dish-search" autocomplete="off"
+          value="<%= typeof searchDish !== 'undefined' ? searchDish : '' %>"
+          oninput="filterDropdown('dish')" onfocus="showDropdown('dish')" style="width: 90%;" />
+
+        <div id="dish-dropdown"
+          style="position: absolute; top: 42px; left: 0; right: 0; z-index: 10; background: white; border: 1px solid #ccc; display: none;">
+          <% if (typeof availabledishes !== 'undefined') {
+            availabledishes.forEach(dish => { %>
+              <div class="dropdown-item dish-item" onclick="selectDropdownValue('dish', '<%= dish %>')"
+                style="padding: 8px 14px; cursor: pointer;">
+                <%= dish %>
+              </div>
+          <% }); } %>
+        </div>
+      </div>
+      <button type="submit" id="search-btn">🔍</button>
+    </form>
+  </div>
+
+  <!-- Vendor Cards -->
+  <% const matchingVenders = venders.filter(v => !searchDish || v.Name.toLowerCase().includes(searchDish.toLowerCase())); %>
+
+  <% if (matchingVenders.length === 0) { %>
+    <p style="text-align:center; margin-top: 40px; font-size: 18px; color: #888;">
+      No dishes found under this user for "<%= searchDish %>"
+    </p>
+  <% } else { %>
+    <div class="cards-container">
+      <% matchingVenders.forEach(vender => { %>
+        <div class="card">
+          <a href="/user/vender-list/<%= vender._id %>" style="text-decoration: none; color: inherit;">
+            <img src="<%= vender.image %>" alt="Vendor Image">
+            <div class="content">
+              <h3><%= vender.Name %></h3>
+              <p><strong>₹<%= vender.Price %></strong></p>
+              <p>
+                <% const stars = Math.round(vender.averageRating || 0); %>
+                <% for (let i = 0; i < stars; i++) { %>⭐<% } %>
+                (<%= vender.averageRating || 0 %>/5)
+              </p>
+              <p><strong><%= vender.location %></strong></p>
+
+              <% if (showOptions) { %>
+                <form action="/user/favourite_list" method="post" class="fav-btn">
+                  <input type="hidden" name="venderId" value="<%= vender._id %>">
+                  <% if (opacity[vender._id] == 10) { %>
+                    <button onclick="loading()" type="submit" style="background: none; border: none;">
+                      <img id="favImg2" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                    </button>
+                  <% } else { %>
+                    <button onclick="loading()" type="submit" style="background: none; border: none;">
+                      <img id="favImg1" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                    </button>
+                  <% } %>
+                </form>
+                <a href="/user/booking/<%= vender._id %>">
+                  <button class="reserve">ORDER</button>
+                </a>
+              <% } else if (!isLogedIn) { %>
+                <a href="/logIn">
+                  <button class="reserve">ORDER</button>
+                </a>
+              <% } %>
+            </div>
+          </a>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>
+ <script>
+  function selectDropdownValue(type, value) {
+    const input = document.getElementById(`${type}-search`);
+    input.value = value;
+
+    const dropdown = document.getElementById(`${type}-dropdown`);
+    dropdown.style.display = 'none';
+  }
+
+  function showDropdown(type) {
+    const input = document.getElementById(`${type}-search`);
+    const dropdown = document.getElementById(`${type}-dropdown`);
+    if (input.value.length >= 1) {
+      dropdown.style.display = 'block';
+    }
+  }
+
+  function filterDropdown(type) {
+    const input = document.getElementById(`${type}-search`);
+    const query = input.value.toLowerCase();
+    const dropdown = document.getElementById(`${type}-dropdown`);
+    const items = dropdown.querySelectorAll(`.${type}-item`);
+
+    if (query.length < 1) {
+      dropdown.style.display = 'none';
+      return;
+    }
+
+    let visible = false;
+    items.forEach(item => {
+      const match = item.textContent.toLowerCase().includes(query);
+      item.style.display = match ? 'block' : 'none';
+      if (match) visible = true;
+    });
+
+    dropdown.style.display = visible ? 'block' : 'none';
+  }
+
+  // 🔽 Hide dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-bar-form')) {
+      document.getElementById('dish-dropdown').style.display = 'none';
+    }
+  });
+
+  // 🔁 Dish filter button
+  function filterByDish(dish) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('dish', dish);
+    window.location.href = url.toString();
+  }
+</script>
+</body>
+</html> 

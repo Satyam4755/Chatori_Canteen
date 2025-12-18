@@ -1,0 +1,713 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+
+<style>
+    #search-btn{
+        display: flex;
+        }
+    body {
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* min-height: 100vh; */
+        padding: 40px;
+    }
+
+    
+    
+/* --- Dropdown Styling --- */
+    #category-dropdown .dropdown-item, 
+    #location-dropdown .dropdown-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #f5f5f5;
+        transition: background 0.2s, color 0.2s;
+        color: #333;
+        border-radius: 8px;
+    }
+
+    #category-dropdown .dropdown-item:hover,
+    #location-dropdown .dropdown-item:hover {
+        background: linear-gradient(90deg, #ffe5ec 60%, #fffbe6 100%);
+        color: #ff4d4f;
+    }
+
+    /* --- Search Bar Form Wrapper --- */
+    .search-bar-form {
+        display: none;
+        justify-content: center;
+        align-items: stretch;
+        gap: 18px;
+        max-width: 650px;
+        width: 95%;
+        margin: 32px auto 28px auto;
+        border-radius: 22px;
+        box-shadow: 0 4px 24px rgba(255, 77, 79, 0.08);
+        padding: 18px 28px;
+        position: relative;
+        z-index: 20;
+    }
+
+    /* --- Search Inputs --- */
+    .search-bar-form input[type="text"] {
+        flex: 1;
+        padding: 12px 18px;
+        border-radius: 14px;
+        border: 1.5px solid #ffd6d6;
+        font-size: 1.08rem;
+        outline: none;
+        transition: border 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 8px rgba(255, 183, 197, 0.07);
+    }
+
+    .search-bar-form input[type="text"]:focus {
+        border-color: #ff4d4f;
+        box-shadow: 0 0 8px #ffd6d6;
+    }
+
+   
+
+    /* --- Dropdown Container --- */
+    #category-dropdown, #location-dropdown {
+        position: absolute;
+        top: 48px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1.5px solid #ffd6d6;
+        border-radius: 16px;
+        margin-top: 6px;
+        max-height: 220px;
+        min-width: 180px;
+        overflow-y: auto;
+        z-index: 99;
+        display: none;
+        box-shadow: 0 8px 32px rgba(255, 183, 197, 0.13);
+        animation: fadeInDown 0.4s;
+    }
+
+    /* --- Dropdown Items --- */
+    .dropdown-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #f5f5f5;
+        transition: background 0.2s, color 0.2s;
+        color: #333;
+        border-radius: 8px;
+    }
+
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(90deg, #ffe5ec 60%, #fffbe6 100%);
+        color: #ff4d4f;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+        .search-bar-form {
+            flex-direction: row;
+            gap: 14px;
+            min-width: 95vw;
+            padding: 14px 8px;
+        }
+        #search-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.3rem;
+        }
+        #category-dropdown, #location-dropdown {
+            top: 44px;
+            min-width: 120px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-bar-form {
+            flex-direction: row;
+            gap: 10px;
+            /* max-width: vw; */
+            padding: 10px 2vw;
+        }
+        .search-bar-form input[type="text"] {
+            font-size: 1rem;
+            padding: 10px 10px;
+        }
+        #search-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+        }
+        #category-dropdown, #location-dropdown {
+            top: 40px;
+            min-width: 90px;
+        }
+    }
+
+    #upper {
+        color: rgb(1, 1, 42);
+        margin-left: 10%;
+        margin-top: 24px;
+        font-size: 25px;
+        font-weight: 600;
+    }
+.category-scroll {
+  display: flex;
+  overflow-x: auto;
+  margin-left: 15%;
+  gap: 25px;
+  padding: 20px;
+  width: 70%;
+  justify-content: flex-start;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 20px;
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-items {
+  flex: 0 0 auto;
+  width: 70px;
+  height: 80px;
+  background: none;              /* ✅ No background */
+  border: none;                  /* ✅ No borders */
+  border-radius: 0;
+  box-shadow: none;              /* ✅ No card shadow */
+  cursor: pointer;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  padding: 8px;
+}
+
+.category-items:hover {
+  transform: scale(1.1);
+}
+
+.category-items .emoji {
+  font-size: 60px;
+  transition: text-shadow 0.3s ease;
+}
+
+.category-items:hover .emoji {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+               0 0 12px rgba(108, 92, 231, 0.6);
+}
+
+.category-items .label {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 5px;
+  color: #333;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    #upper{
+        font-size: 15px;
+    }
+    .category-scroll{
+        margin-left: 2%;
+        width: 90%;
+    }
+  .category-items {
+    width: 70px;
+    height: 80px;
+  }
+
+  .category-items .emoji {
+    font-size: 50px;
+  }
+
+  .category-items .label {
+    font-size: 18px;
+  }
+}
+    h1 {
+        text-align: center;
+        margin-top: 40px;
+        color: darkblue;
+        font-size: 40px;
+        letter-spacing: 2px;
+        font-weight: 700;
+        /* text-shadow: 0 2px 8px #ffd6d6; */
+        animation: fadeInDown 0.8s ease forwards;
+    }
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 18px 10px 0 10px;
+    max-height: 105vh;
+    overflow: hidden;
+}
+
+.card {
+    border-radius: 18px;
+    overflow: hidden;
+    width: 170px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 2px solid #ffffff;
+    position: relative;
+}
+
+
+.card:hover {
+    transform: translateY(-8px) scale(1.03);
+}
+
+.card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    transition: transform 0.4s, filter 0.4s;
+    margin-bottom: 4px; /* small spacing after image */
+}
+
+.card img:hover {
+    transform: scale(1.08);
+    filter: brightness(1.1) saturate(1.2);
+}
+
+.content {
+    padding: 0 10px; /* minimal padding */
+}
+
+.card h3 {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #2c3e50;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+}
+
+.card p {
+    margin: 2px 0 0 0;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #555;
+    font-size: 13px;
+    text-align: left;
+    line-height: 1.2;
+}
+    h2 {
+        text-align: center;
+        color: darkblue;
+        margin-top: 48px;
+        font-size: 150%;
+        font-weight: 700;
+        letter-spacing: 1px;
+        /* text-shadow: 0 2px 8px #ffd6d6; */
+    }
+
+    
+
+    .promo-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 48px 0 32px 0;
+    }
+
+   .promo-image-wrapper {
+    display: inline-block;
+    border-radius: 26px;
+    box-shadow: 0 10px 32px rgba(255, 77, 79, 0.13), 0 2px 8px rgba(255, 183, 197, 0.13);
+    transition: transform 0.4s cubic-bezier(.4,2,.3,1), box-shadow 0.4s;
+    background: transparent;
+}
+
+.promo-image-wrapper:hover {
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: 0 16px 48px rgba(255, 183, 197, 0.22), 0 4px 16px rgba(255, 77, 79, 0.13);
+    filter: brightness(1.08) saturate(1.1);
+}
+
+.promo-image {
+    filter: invert();
+    max-width: 90vw;
+    width: 500px; 
+    height: 200px;
+    object-fit: contain;
+    display: block;
+    border-radius: 26px;
+    background: transparent;
+}
+.promo-image:hover {
+        transform: scale(1.04) rotate(-1deg);
+        background: transparent;
+    }
+
+    /* --- OFFERS SECTION --- */
+    .offers-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 28px;
+        margin: 36px 0 0 0;
+    }
+
+    .offer-card {
+        background: linear-gradient(90deg, #cfc4e7 60%, #d9daed 100%);
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(255, 183, 197, 0.13);
+        width: 320px;
+        padding: 28px 22px 22px 22px;
+        margin: 0 0 16px 0;
+        border: 2px solid #f2e9dd;
+        position: relative;
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: left;
+    }
+
+    .offer-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 12px 32px rgba(255, 183, 197, 0.22);
+        border-color: #451ef0;
+    }
+
+    .offer-card h3 {
+        color: darkblue;
+        font-size: 20px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-align: left;
+    }
+
+    .offer-card p {
+        color: #444;
+        font-size: 15px;
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+    .offer-badge {
+        position: absolute;
+        top: -18px;
+        left: 18px;
+        background: linear-gradient(90deg, #cfc4e7 60%, #d9daed 100%);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 6px 18px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px #ffd6d6;
+        letter-spacing: 1px;
+    }
+
+    /* --- Birthday & Delivery Offers --- */
+    .special-offer {
+        background: linear-gradient(90deg, #cfc4e7 60%, #d9daed 100%);
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(255, 183, 197, 0.13);
+        width: 90%;
+        max-width: 700px;
+        margin: 24px auto 0 auto;
+        padding: 28px 22px 22px 22px;
+        border: 2px solid #eee8e0;
+        text-align: center;
+        font-size: 17px;
+        color: #211df1;
+        font-weight: 600;
+        position: relative;
+    }
+
+    .special-offer strong {
+        color: #13289f;
+    }
+
+    .special-offer .emoji {
+        font-size: 28px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+
+    /* Remove underlines from all links inside .card */
+    .card a {
+        text-decoration: none !important;
+        color: inherit;
+    }
+
+    /* Remove underline from RESERVE button link */
+    .card .reserve {
+        text-decoration: none !important;
+    }
+
+
+    @media (max-width: 880px) {
+  .cards-container {
+    display: grid;                  /* ✅ Switch to grid */
+    grid-template-columns: repeat(2, 1fr);  /* ✅ 2 columns */
+    gap: 16px; 
+  }
+
+  .card {
+    width: 95%;
+    height: 28vh;
+    aspect-ratio: 1 / 1.2; /* ✅ Maintain aspect ratio for cards */
+  }
+
+  .offer-card,
+  .special-offer {
+    width: 90%;
+    padding: 16px 8px 12px 8px;
+  }
+
+  .promo-image {
+    width: 98vw;
+  }
+}
+    .cards-container{
+        max-height: 438vh;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+</style>    
+
+
+<%- include('../partials/nav') %>
+    
+<form action="/" class="search-bar-form" method="get" id="search-bar" >
+
+    
+ 
+    <!-- 📍 Location Search -->
+    <div style="position: relative; flex: 1;">
+        <input type="text" name="location" placeholder="📍 Location" id="location-search" autocomplete="off"
+            value="<%= typeof searchLocation !== 'undefined' ? searchLocation : '' %>"
+            oninput="filterDropdown('location')" onfocus="showDropdown('location')"
+            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" />
+
+        <!-- 🔽 Location Dropdown -->
+        <div id="location-dropdown"
+            style="position: absolute; top: 42px; left: 0; right: 0; z-index: 10; background: white; border: 1px solid #ccc; display: none;">
+            <% availableLocations.forEach(loc=> { %>
+                <div class="dropdown-item location-item" onclick="selectDropdownValue('location', '<%= loc %>')"
+                    style="padding: 8px 14px; cursor: pointer;">
+                    <%= loc %>
+                </div>
+                <% }) %>
+        </div>
+    </div>
+
+    <!-- 🔎 Search Button -->
+    <button type="submit" id="search-btn" style="padding: 10px 18px; color: white; border: none; cursor: pointer;">
+        🔍
+    </button>
+</form>
+
+<b id="upper">
+    What's On Your Mood Today?
+</b>
+
+<!-- 🍽️ Category Scroll -->
+<div class="category-scroll">
+    <div class="category-items" onclick="filterByCategory('Biriyani')">
+        <span class="emoji">🍛</span>
+        <span class="label">Biriyani</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Pizza')">
+        <span class="emoji">🍕</span>
+        <span class="label">Pizza</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Noodles')">
+        <span class="emoji">🍜</span>
+        <span class="label">Noodles</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Coffee')">
+        <span class="emoji">☕</span>
+        <span class="label">Coffee</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Paratha')">
+        <span class="emoji">🥙</span>
+        <span class="label">Paratha</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Tea')">
+        <span class="emoji">🫖</span>
+        <span class="label">Tea</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Ice Cream')">
+        <span class="emoji">🍦</span>
+        <span class="label">Ice Cream</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Puri')">
+        <span class="emoji">🍽️</span>
+        <span class="label">Puri</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Chole Bhature')">
+        <span class="emoji">🍲</span>
+        <span class="label">Chole Bhature</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Khichdi')">
+        <span class="emoji">🥣</span>
+        <span class="label">Khichdi</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Chinese')">
+        <span class="emoji">🥡</span>
+        <span class="label">Chinese</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Pure Veg')">
+        <span class="emoji">🥗</span>
+        <span class="label">Pure Veg</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('North Indian')">
+        <span class="emoji">🍽️</span>
+        <span class="label">North Indian</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Desserts')">
+        <span class="emoji">🍰</span>
+        <span class="label">Desserts</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Lassi')">
+        <span class="emoji">🥤</span>
+        <span class="label">Lassi</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('Gulab Jamun')">
+        <span class="emoji">🍩</span>
+        <span class="label">Gulab Jamun</span>
+    </div>
+    <div class="category-items" onclick="filterByCategory('South Indian')">
+        <span class="emoji">🍛</span>
+        <span class="label">South Indian</span>
+    </div>
+</div>
+
+<hr style="width: 90%; margin: 20px auto; border: 1px solid #1a0c439f;">
+
+
+<b id="upper">
+    See What Your Canteen Have to Offer!!
+</b>
+<% if (typeof ownerName !== 'undefined') { %>
+  <h2 style="text-align:center; color:#333; margin-bottom:12px;">
+    Canteens by <%= ownerName %>
+  </h2>
+<% } %>
+<div class="mainDabba">
+
+    <% if (venders.length===0) { %>
+        <p style="text-align:center; margin-top: 40px; font-size: 18px; color: #888;">
+            No vendors found
+            <% if (searchLocation && searchLocation.trim() !=='' ) { %>
+                for "<%= searchLocation %>"
+                    <% } %>.
+        </p>
+        <% } else { %>
+
+            <div class="cards-container">
+                <% venders.forEach(vender=> { %>
+                    <div class="card">
+                        <a href="/user/vendor-owner/<%= vender.vender._id %>">
+                            <img src="<%= vender.image %>" alt="vender Image">
+                            <div class="content">
+                                <h3>
+                                    <%= vender.Name %>
+                                </h3>
+                                <p><strong>₹<%= vender.Price %></strong></p>
+                                <p>⭐
+                                    <% for (let i=1; i <=Math.round(vender.averageRating); i++) { %>
+                                        ⭐
+                                         <% } %>
+                                            (<%= vender.averageRating %>/5)
+                                </p>
+                                <p><strong>
+                                        <%= vender.vender?.location || 'Unknown Location' %>
+                                    </strong>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                    <% }) %>
+            </div>
+            <% } %>
+
+
+                <br>
+                <div class="promo-image-container">
+                    <img src="/3.png" alt="Promotional" class="promo-image">
+                </div>
+                
+                <h2>Why Order Through Us?</h2>
+
+<h3 class="special-offer" style="min-width: 90%;">
+    🎓 Welcome to <strong>Chatori Canteen</strong> — a smart bridge between <strong>students</strong> and <strong>college canteens</strong>.
+    We don’t cook Item ourselves — instead, we connect you with your favorite canteens so you can
+    <strong>order online, save time, and avoid long queues</strong> ⏱️🍽️.
+    <br><br>
+    Whether you’re in class 📚, at the library 🧑‍💻, or chilling with friends, simply place your order
+    online and pick it up when it’s ready. No waiting, no confusion — just quick, smooth, and
+    reliable service.
+    <br><br>
+    For canteens, we help manage orders digitally, reduce crowding, and serve students faster.
+    Chatori Canteen is not just a Item platform — it’s a <strong>time-saving system for campus life</strong> ⚡.
+</h3>
+
+<h2>EXCLUSIVE STUDENT OFFERS!</h2>
+
+<p style="font-size:17px; color: darkblue; font-weight:600; margin-bottom:24px;">
+    Enjoy special discounts & perks available only on online orders.
+</p>
+
+<div class="offers-section">
+    <div class="offer-card">
+        <div class="offer-badge">⏳ Save Time</div>
+        <h3>Skip the Queue</h3>
+        <p>Order online and collect your Item without standing in long canteen lines.</p>
+    </div>
+
+    <div class="offer-card">
+        <div class="offer-badge">💸 Student Discounts</div>
+        <h3>Pay Less, Eat More</h3>
+        <p>Get exclusive discounts and combo offers available only on our platform.</p>
+    </div>
+</div>
+
+<div class="special-offer">
+    <span class="emoji">🎉</span> <strong>Special Festival & Event Offers</strong><br>
+    Enjoy exciting discounts during college events, festivals, and special days.<br>
+    <strong>Note:</strong> Offers vary by canteen.
+</div>
+
+<div class="special-offer">
+    <span class="emoji">📱</span> <strong>Easy Online Ordering</strong><br>
+    Browse menus, check availability, and order in seconds from your phone.<br>
+    <strong>Note:</strong> Available for registered students only.
+</div>
+
+</div>
+  <%-include('../partials/loading')%>
+  <%-include('../partials/footer')%>
+
+ 
+</body>
+</html>

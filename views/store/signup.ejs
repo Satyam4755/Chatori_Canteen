@@ -1,0 +1,390 @@
+<%- include('../partials/head') %>
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f9ff;
+}
+
+/* MAIN CONTAINER */
+.form-container {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 12px 30px rgba(10, 37, 64, 0.25);
+  width: 500px;
+  margin: 20px auto;
+  border: 2px solid #1e40af;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #0a2540;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* INPUTS & SELECT */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 92.5%;
+  padding: 12px 15px;
+  border: 2px solid #1e40af;
+  border-radius: 1rem;
+  outline: none;
+  font-size: 1rem;
+  background: #f0f6ff;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #0a2540;
+  box-shadow: 0 0 10px rgba(30, 64, 175, 0.7);
+  background: #ffffff;
+}
+
+/* FILE INPUT */
+input[type="file"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid #1e40af;
+  border-radius: 1rem;
+  background: #f0f6ff;
+  cursor: pointer;
+}
+
+input[type="file"]:focus {
+  border-color: #0a2540;
+  box-shadow: 0 0 10px rgba(30, 64, 175, 0.7);
+}
+
+/* FLOATING LABELS */
+label {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-size: 1rem;
+  pointer-events: none;
+  background: #f0f6ff;
+  padding: 0 6px;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+input:focus + label,
+input:valid + label,
+select:focus + label {
+  top: -10px;
+  font-size: 0.85rem;
+  color: #0a2540;
+  background: #ffffff;
+}
+
+/* FILE LABEL FIX */
+input[type="file"] + label {
+  position: static;
+  transform: none;
+  color: #374151;
+  font-size: 1rem;
+  background: transparent;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #0a2540, #1e40af);
+  color: #ffffff;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #1e40af, #0a2540);
+  transform: scale(1.05);
+}
+
+/* CHECKBOX */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  color: #374151;
+}
+
+.checkbox-group input[type="checkbox"] {
+  transform: scale(1.2);
+  accent-color: #1e40af;
+}
+
+.checkbox-group a {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+/* LOGIN LINK */
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-link a {
+  color: #1e40af;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.login-link a:hover {
+  color: #ffffff;
+  background-color: #1e40af;
+  padding: 6px 12px;
+  border-radius: 12px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .form-container {
+    width: 90%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 1rem;
+  }
+}
+</style>
+
+<body>
+  <div class="form-container" role="main" aria-labelledby="form-title">
+    <h2 id="form-title"><%= editing ? 'Edit Profile' : 'Sign Up' %></h2>
+
+    <form
+      action="<%= editing ? '/edit_details' : '/signUP' %>"
+      method="post"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <input type="hidden" name="id" value="<%= editing ? user._id : '' %>" />
+      <%- include('../partials/errorHandel') %>
+
+      <!-- Profile Picture -->
+      <div class="input-group">
+        <input
+          type="file"
+          id="profilePicture"
+          name="profilePicture"
+          accept="image/*"
+          aria-describedby="profilePicture-desc"
+        />
+        <label style="color: maroon; font-weight: 800;" for="profilePicture">Profile Picture</label>
+        <small style="color:darkblue ;" id="profilePicture-desc" class="sr-only">
+          Upload your profile picture (optional)
+        </small>
+      </div>
+
+      <h3>Are you Customer or Vendor?</h3>
+
+      <!-- User Type -->
+      <div class="input-group">
+        <% if (!editing) { %>
+        <select
+          id="userType"
+          name="userType"
+          required
+          aria-required="true"
+          aria-label="User Type"
+        >
+          <option value="" disabled <%= !oldInput || !oldInput.userType ? 'selected' : '' %>>
+            Select User Type
+          </option>
+          <option value="guest" <%= oldInput && oldInput.userType === 'guest' ? 'selected' : '' %>>
+            Customer
+          </option>
+          <option value="vender" <%= oldInput && oldInput.userType === 'vender' ? 'selected' : '' %>>
+            Vendor
+          </option>
+        </select>
+        <label for="userType">Select User Type</label>
+        <% } else { %>
+        <select id="userType" name="userType" disabled aria-disabled="true">
+          <option value="<%= user.userType %>" selected>
+            <%= user.userType.charAt(0).toUpperCase() + user.userType.slice(1) %>
+          </option>
+        </select>
+        <label for="userType">User Type</label>
+        <% } %>
+      </div>
+
+      <!-- canteen Name (Only if vendor) -->
+      <div class="input-group" id="canteenGroup" style="display: none;">
+        <input
+          type="text"
+          id="canteenName"
+          name="canteenName"
+          value="<%= oldInput && oldInput.canteenName ? oldInput.canteenName : '' %>"
+          placeholder="Enter your canteen name"
+        />
+        <label for="canteenName">canteen Name</label>
+      </div>
+
+      <!-- First Name -->
+      <div class="input-group">
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          value="<%= editing ? user.firstName : (oldInput ? oldInput.firstName : '') %>"
+          required
+          autocomplete="given-name"
+        />
+        <label for="firstName">First Name</label>
+      </div>
+
+      <!-- Last Name -->
+      <div class="input-group">
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          value="<%= editing ? user.lastName : (oldInput ? oldInput.lastName : '') %>"
+          required
+          autocomplete="family-name"
+        />
+        <label for="lastName">Last Name</label>
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="<%= editing ? user.email : (oldInput ? oldInput.email : '') %>"
+          required
+          autocomplete="email"
+        />
+        <label for="email">Email</label>
+      </div>
+
+      <!-- Location (Only for Vendor) -->
+      <div class="input-group" id="locationGroup" style="display: none;">
+        <input
+          type="text"
+          id="location"
+          name="location"
+          value="<%= editing ? user.location : (oldInput ? oldInput.location : '') %>"
+          autocomplete="off"
+        />
+        <label for="location">Location/ College Name/ Company Name</label>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <input
+          type="password"
+          id="password"
+          name="password"
+          minlength="6"
+          required
+          autocomplete="<%= editing ? 'new-password' : 'new-password' %>"
+          placeholder="<%= editing ? 'Leave blank to keep current password' : '' %>"
+        />
+        <label for="password">Password</label>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="input-group">
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          minlength="6"
+          required
+          autocomplete="<%= editing ? 'new-password' : 'new-password' %>"
+          placeholder="<%= editing ? 'Leave blank to keep current password' : '' %>"
+        />
+        <label for="confirmPassword">Confirm Password</label>
+      </div>
+
+      <!-- Terms Checkbox -->
+      <% if (!editing) { %>
+      <div class="checkbox-group">
+        <input type="checkbox" id="terms" name="terms" required aria-required="true" />
+        <label for="terms">
+          I agree to the <a href="#">terms and conditions</a>
+        </label>
+      </div>
+      <% } %>
+
+      <!-- Submit Button -->
+      <button type="submit">
+        <%= editing ? 'Update Profile' : 'Create Account' %>
+      </button>
+    </form>
+
+    <% if (!editing) { %>
+    <div class="login-link" aria-label="Login link">
+      Already have an account?
+      <a href="/login"><strong>Log In</strong></a>
+    </div>
+    <% } else { %>
+    <div style="text-align:center; margin-top:1rem;">
+      <a href="/" aria-label="Back to home" style="display:inline-block; padding:8px 20px; 
+  background: linear-gradient(135deg, #0a2540, #1e40af); color:#fff; border-radius:12px; text-decoration:none; font-weight:600; font-size:1rem; box-shadow:0 2px 8px rgba(233,30,99,0.08); transition:background 0.3s, color 0.3s, transform 0.2s;">
+        Back
+      </a>
+    </div>
+    <% } %>
+  </div>
+
+  <!-- Toggle canteen and location fields based on user type -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userTypeSelect = document.getElementById('userType');
+      const canteenGroup = document.getElementById('canteenGroup');
+      const locationGroup = document.getElementById('locationGroup');
+      const locationInput = document.getElementById('location');
+
+      if (userTypeSelect) {
+        const toggleFields = () => {
+          const isVendor = userTypeSelect.value === 'vender';
+          canteenGroup.style.display = isVendor ? 'block' : 'none';
+          locationGroup.style.display = isVendor ? 'block' : 'none';
+          locationInput.required = isVendor;
+        };
+
+        toggleFields(); // Initial check
+        userTypeSelect.addEventListener('change', toggleFields);
+      }
+    });
+  </script>
+
+  <%- include('../partials/loading') %>
+</body>
+</html>

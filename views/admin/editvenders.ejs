@@ -1,0 +1,173 @@
+<%-include('../partials/head')%>
+<%-include('../partials/nav')%>
+<%-include('../partials/background')%>
+<style>
+    #search-btn{
+        display: none;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        color: #2719bc;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    .form-container {
+        background-color: white;
+        width: 90%;
+        max-width: 500px;
+        margin: auto;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container input,
+    .form-container select {
+        padding: 12px;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        transition: border 0.3s;
+        box-sizing: border-box;
+    }
+
+    .form-container input:focus {
+        border-color: #2719bc;
+        outline: none;
+    }
+
+    .form-container button {
+        padding: 12px 24px;
+        background-color: #5671e7;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #1435c8;
+        transform: scale(1.05);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.5rem;
+            margin: 1.5rem 1rem 1rem;
+        }
+
+        .form-container {
+            padding: 1.5rem 1rem;
+            width: 95%;
+        }
+
+        .form-container input,
+        .form-container button {
+            font-size: 0.95rem;
+            padding: 10px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+        }
+
+        .form-container button {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+        }
+    }
+    .badaDabba{
+        margin-bottom: 15%;
+    }
+</style>
+<div class="badaDabba">
+<h1><%= editing ? "Edit Your Item Details" : "Add Your Item Details " %></h1>
+
+
+
+
+<div class="form-container">
+    <form id="venderForm" action="/vender/<%= editing ? 'edit_vender' : 'addVenderShip' %>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<%= editing ? vender._id : '' %>">
+
+        <div class="form-group">
+            <label for="image">Upload item picture:</label>
+            <input type="file" id="image" name="image" accept="image/jpg,image/jpeg,image/png">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="Name" value="<%= editing ? vender.Name : '' %>" placeholder="🥘 Item Name" required>
+        </div>
+
+ 
+        <div class="form-group">
+            <input type="number" name="Price" value="<%= editing ? vender.Price : '' %>" placeholder="💰 Price " required>
+        </div>
+
+        <div class="form-group">
+            <label for="Category">Category:</label>
+            <select name="Category" id="Category" required>
+                <option value="" disabled <%=editing ? '' : 'selected' %>>Select category</option>
+            
+                <option value="Biriyani" <%=editing && vender.Category==='Biriyani' ? 'selected' : '' %>>Biriyani</option>
+                <option value="Pizza" <%=editing && vender.Category==='Pizza' ? 'selected' : '' %>>Pizza</option>
+                <option value="Noodles" <%=editing && vender.Category==='Noodles' ? 'selected' : '' %>>Noodles</option>
+                <option value="Coffee" <%=editing && vender.Category==='Coffee' ? 'selected' : '' %>>Coffee</option>
+                <option value="Paratha" <%=editing && vender.Category==='Paratha' ? 'selected' : '' %>>Paratha</option>
+                <option value="Tea" <%=editing && vender.Category==='Tea' ? 'selected' : '' %>>Tea</option>
+                <option value="Ice Cream" <%=editing && vender.Category==='Ice Cream' ? 'selected' : '' %>>Ice Cream</option>
+                <option value="Puri" <%=editing && vender.Category==='Puri' ? 'selected' : '' %>>Puri</option>
+                <option value="Chole Bhature" <%=editing && vender.Category==='Chole Bhature' ? 'selected' : '' %>>Chole Bhature
+                </option>
+                <option value="Khichdi" <%=editing && vender.Category==='Khichdi' ? 'selected' : '' %>>Khichdi</option>
+                <option value="Chinese" <%=editing && vender.Category==='Chinese' ? 'selected' : '' %>>Chinese</option>
+                <option value="Pure Veg" <%=editing && vender.Category==='Pure Veg' ? 'selected' : '' %>>Pure Veg</option>
+                <option value="North Indian" <%=editing && vender.Category==='North Indian' ? 'selected' : '' %>>North Indian
+                </option>
+                <option value="Desserts" <%=editing && vender.Category==='Desserts' ? 'selected' : '' %>>Desserts</option>
+                <option value="Lassi" <%=editing && vender.Category==='Lassi' ? 'selected' : '' %>>Lassi</option>
+                <option value="Gulab Jamun" <%=editing && vender.Category==='Gulab Jamun' ? 'selected' : '' %>>Gulab Jamun</option>
+                <option value="South Indian" <%=editing && vender.Category==='South Indian' ? 'selected' : '' %>>South Indian
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="Description" value="<%= editing ? vender.Description : '' %>" placeholder="📝 Description" required>
+        </div>
+        <button onclick="loading()" type="submit"><%= editing ? "✨ Update vender" : "🏡 Add vender" %></button>
+    </form>
+
+</div>
+</div>
+</div>
+  <%-include('../partials/loading')%>
+</body>
+</html>

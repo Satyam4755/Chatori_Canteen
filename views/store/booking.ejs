@@ -1,0 +1,351 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+<style> 
+#search-btn{
+        display: none;
+    }
+  .headings {
+    margin: 10px auto 20px auto;
+    text-align: center;
+    background: linear-gradient(135deg, #fdfcfb, #e2d1c3);
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 40%;
+    max-height: 7%;
+  }
+
+  .headings h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin: 0;
+  }
+
+  .headings h2 {
+    font-size: 1.2em;
+    color: #7f8c8d;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .mainDabba {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto 60px auto;
+    animation: fadeIn 1s ease;
+  }
+
+  .cards-container,
+  .booking-cards-container {
+    flex: 1 1 320px;
+    max-width: 420px;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .card:hover img {
+    transform: scale(1.05);
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  .content h3 {
+    color: #ff4e74;
+    margin-bottom: 8px;
+    font-size: 1.3em;
+  }
+
+  .content p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95em;
+  }
+
+  form {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 1s ease;
+  }
+
+  form h2 {
+    text-align: center;
+    color: #ff4e74;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+  }
+
+  label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+    font-size: 0.95em;
+  }
+
+  input:focus, select:focus {
+    border-color: #ff4e74;
+    outline: none;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff4e74;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #e53963;
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .mainDabba {
+      flex-direction: row;
+      padding: 15px;
+    }
+    form{
+      width: 87%;
+      padding: 20px;
+    }
+    input, select {
+      width: 90%;
+    }
+
+    .headings {
+      padding: 15px 20px;
+    }
+
+    .cards-container, .booking-cards-container {
+      max-width: 100%;
+    }
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* Custom Radio Tiles */
+.radio-tile-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.radio-tile {
+  flex: 1 1 45%;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.radio-tile:hover {
+  border-color: #ff4e74;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.radio-tile input[type="radio"] {
+  display: none;
+}
+
+.radio-tile.selected {
+  border-color: #ff4e74;
+  background-color: #ffe6ec;
+  color: #d6336c;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+.month-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.month-btn {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #eee;
+  border: 2px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.month-btn:hover {
+  background-color: #ffe6ec;
+  border-color: #ff4e74;
+}
+
+.month-btn.selected {
+  background-color: #ffe6ec;
+  border-color: #ff4e74;
+  color: #d6336c;
+}
+.badaDabba{
+        margin-bottom: 15%;
+    }
+</style>
+
+<%- include('../partials/nav') %>
+
+
+
+<div class="badaDabba">
+
+
+<div class="mainDabba">
+  <div class="cards-container">
+    <div class="card">
+      <a id="link" href="/user/vender-list/<%=vender._id %>" style="text-decoration: none; color: black;">
+        <img src="<%= vender.image %>" alt="vender Image">
+        <div class="content">
+          <h3><%= vender.Name %></h3>
+          <p><strong> ₹<%= vender.Price %></strong></p>
+          <p><strong> <%= vender.vender?.location %></strong></p>
+          <p><strong>⭐️</strong>
+            <% const fullStars=Math.floor(vender.averageRating || 0); %>
+            <% for(let i=0; i < fullStars; i++) { %> ⭐ <% } %>
+            <span style="margin-left: 5px; font-weight: 700;color: red;">
+              (<%= vender.averageRating || 0 %>/5)
+            </span>
+          </p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="booking-cards-container">
+    <form action="/user/submit_booking/<%=vender._id%>" method="post">
+      <%-include('../partials/errorHandel')%>
+      <h2>Item Order</h2>
+
+      <input type="hidden" name="venderId" value="<%= vender._id %>">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="Enter your phone number (10 digits)" pattern="[0-9]{10}" required>
+
+      <!-- address -->
+      <p id="addressWarning" style="color: red; display: none; font-size: 14px;"></p>
+      <label for="address">Address</label>
+      <input type="text" name="address" id="address" placeholder="Enter your address" required>
+
+      <!-- script for checking the address -->
+      <script>
+        const vendorLocation = "<%= (vender.vender?.location || 'Unknown Location').toLowerCase() %>";
+        const locationWords = vendorLocation.split(/\s+/); // split into words like ['lucknow', 'naka']
+
+        const addressInput = document.getElementById('address');
+        const warning = document.getElementById('addressWarning');
+        const submitBtn = document.querySelector('button[type="submit"]');
+
+        function validateAddress() {
+          const userAddress = addressInput.value.toLowerCase();
+          const addressWords = userAddress.split(/\s+/);
+
+          const hasMatch = addressWords.some(word => locationWords.includes(word));
+
+          if (!hasMatch) {
+            warning.style.display = 'block';
+            warning.textContent = `⚠️ We can only serve in "${vendorLocation}" only.`;
+            submitBtn.disabled = true;
+          } else {
+            warning.style.display = 'none';
+            submitBtn.disabled = false;
+          }
+        }
+
+        addressInput.addEventListener('input', validateAddress);
+      </script>
+
+      <!-- Show Current Order Date -->
+      <p style="color: green; font-weight: bold;">
+        📅 Order Date: <%= new Date().toLocaleDateString() %>
+      </p>
+
+      <label for="payment">Payment Method</label>
+      <select id="payment" name="payment" required>
+        <option value="">Select Payment Method</option>
+        <option value="credit_card">Credit Card</option>
+        <option value="debit_card">Debit Card</option>
+        <option value="paypal">PayPal</option>
+        <option value="cash">Cash</option>
+      </select>
+
+      <input type="hidden" id="perdayValue" name="perdayValue" value="<%=vender.Price%>">
+      <input type="hidden" name="totalAmount" id="totalAmountInput" value="<%=vender.Price%>">
+
+      <h3 style="color: #d6336c; text-align: center;">Total Amount: ₹<span id="totalAmount"><%=vender.Price%></span></h3>
+
+      <button class="submit" type="submit" onclick="loading()">Order Now</button>
+    </form>
+  </div>
+</div>
+
+  <%-include('../partials/loading')%>
+  <%-include('../partials/footer')%>
+</body>
+</html>
