@@ -140,7 +140,7 @@ exports.venderOwner = async (req, res, next) => {
     // Get all unique dishes
     const uniqueDishes = await venders.distinct("Name");
 
-    res.render('./store/canteen', {
+    res.render('./store/restaurant', {
       venders: allVenders,
       owner: owner || null,
       ownerName: owner?.canteenName || owner?.name || 'Vendor Owner',
